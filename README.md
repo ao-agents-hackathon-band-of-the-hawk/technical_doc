@@ -219,3 +219,135 @@ finetune_lora("new_session", "Qwen/Qwen1.5-0.5B-Chat", &params)?;
 ## Conclusion
 
 Pyrust-NN streamlines LLM workflows with Qwen focus and advanced features like continual LoRA.
+
+
+
+
+# Technical Documentation: Using LoRA Adapters in wasi_nn_backend
+
+## 1. Introduction
+
+The `wasi_nn_backend` project implements a WebAssembly System Interface for Neural Networks (WASI-NN), enabling the execution of Llama models via the Llama.cpp library. This documentation details the integration of LoRA (Low-Rank Adaptation) adapters within the backend.
+
+LoRA is a technique for efficiently fine-tuning large language models (LLMs) for specific tasks without the need to retrain the entire model. In `wasi_nn_backend`, LoRA support is implemented in a modular fashion. The base model is loaded first, and then one or more LoRA adapters are applied on top of it, either during the initial model loading process or dynamically at runtime. This approach mirrors the functionality within Llama.cpp, where LoRA adapters are expected to be in the GGUF file format.
+
+Configuration is managed through a JSON interface, allowing for precise control over which adapters are applied and their respective influence through scaling factors.
+
+## 2. Prerequisites
+
+Before using LoRA adapters, ensure the following requirements are met:
+
+*   **LoRA Files in GGUF Format:** Adapters must be in the GGUF format. You may need to convert your adapters from other formats (e.g., safetensors) using community tools or by merging them directly into the base model.
+*   **Built Backend:** The `wasi_nn_backend` project must be successfully built. This requires initializing the Llama.cpp submodule first (`git submodule update --init --recursive`).
+*   **Dependencies:** The project relies on the `cJSON` library for parsing configuration files. For GPU acceleration, an appropriate CUDA environment is an optional dependency.
+
+## 3. Configuration
+
+LoRA adapters are defined within a JSON object that is passed to the backend during initialization or model loading. The configuration is specified under the `lora_adapters` key.
+
+The `lora_adapters` key holds an array of adapter objects. Each object can contain the following key-value pairs:
+
+*   `"path"` (string, **required**): The file system path to the GGUF-formatted LoRA adapter file.
+*   `"scale"` (float, *optional*): A scaling factor that determines the influence of the adapter. The default value is `1.0`.
+
+The backend parses this JSON configuration using `cJSON`. If any item in the array is invalid (e.g., it is missing the `"path"` key), it is skipped, and a warning is logged.
+
+#### Example: Single Adapter Configuration
+
+```json
+{
+  "model": {
+    "n_gpu_layers": 32,
+    "ctx_size": 2048
+  },
+  "lora_adapters": [
+    {
+      "path": "./path/to/your-adapter.gguf",
+      "scale": 1.0
+    }
+  ]
+}
+```
+
+#### Example: Multiple (Stacked) Adapter Configuration
+
+Multiple adapters can be stacked by including them in the array. They are applied in the order they are listed.
+
+```json
+{
+  "lora_adapters": [
+    {
+      "path": "./path/to/adapter1.gguf",
+      "scale": 1.0
+    },
+    {
+      "path": "./path/to/adapter2.gguf",
+      "scale": 0.5
+    }
+  ]
+}
+```
+
+## 4. Loading LoRA Adapters
+
+Adapters can be loaded at two distinct stages: during the initial setup of the backend or when a specific model is loaded.
+
+#### Backend Initialization
+
+Global LoRA adapters can be configured when the backend is first initialized using the `wasi_init_backend_with_config` function. The adapters specified in the JSON configuration will be applied to all models loaded subsequently unless overridden.
+
+#### Model Loading
+
+LoRA adapters are most commonly loaded and applied when a model is loaded by name using the `wasi_load_by_name_with_config` function. The function's JSON configuration parameter is parsed, and each adapter specified in the `lora_adapters` array is loaded and applied to the base model.
+
+## 5. Runtime Application
+
+The backend supports the dynamic application of LoRA adapters on a per-session basis. The `run_inference_for_session_with_params` function can accept a set of runtime parameters that include a `lora_adapters` configuration. If this runtime configuration is provided, it will override any globally defined adapters for that specific inference session. If it is not provided, the session will default to using the adapters configured when the model was first loaded.
+
+## 6. Error Handling
+
+The system is designed to be resilient to LoRA loading failures. If an adapter cannot be loaded—due to an invalid file path, incorrect GGUF format, or other issues—the backend will:
+
+1.  Log an informative error or warning message indicating which adapter failed.
+2.  Skip the application of the failed adapter.
+3.  Continue execution using the base model and any other successfully loaded adapters.
+
+This ensures that a faulty adapter configuration does not prevent the underlying base model from functioning.
+
+## 7. Resource Management (Cleanup)
+
+Memory management for LoRA adapters is handled automatically. All resources allocated for loaded adapters are tracked within the `LlamaChatContext` and are properly freed when the context is destroyed (via its destructor). This prevents memory leaks associated with loading and unloading adapters.
+
+## 8. Testing
+
+The LoRA adapter functionality is validated through a dedicated test suite located at `test/test_lora.c`. These tests can be compiled and executed to verify the implementation and cover a range of scenarios, including:
+
+*   Basic loading of a single adapter.
+*   Stacking and loading multiple adapters.
+*   Dynamic loading and unloading of adapters at runtime.
+*   Correct application of scaling factors.
+*   Graceful handling of loading errors.
+*   Runtime override of global configurations.
+*   Performance impact of applying adapters.
+
+## 9. Troubleshooting
+
+If you encounter issues while using LoRA adapters, consider the following common problems and solutions:
+
+*   **Adapter Loading Failures:**
+    *   Verify that the adapter files are in the correct **GGUF format**.
+    *   Double-check that the file **paths** in the JSON configuration are correct and accessible from where the backend is being executed.
+    *   Check the backend's logs (via `WASI_NN_LOG_*`) for specific error messages.
+
+*   **Performance Issues:**
+    *   Applying multiple LoRA adapters can introduce a minor performance overhead during model loading and the initial inference. Use the provided test suite to benchmark the impact.
+
+*   **Build Issues:**
+    *   Ensure the **Llama.cpp submodule** has been correctly initialized and updated before building the main project.
+    *   Compiler warnings related to unused parameters in the Llama.cpp library can typically be suppressed using pragmas if necessary.
+
+
+
+
+
+
