@@ -42,23 +42,12 @@ To run these custom models safely and efficiently, we've extended the **`wasi_nn
 
 **Dynamic Adapter Loading via JSON Configuration**
 
-Our key addition is support for loading one or more LoRA adapters dynamically when the model starts up. It's all managed through a simple JSON file for easy setup.
-
-```json
-{
-  "lora_adapters": [
-    {
-      "path": "./path/to/personality_adapter.gguf",
-      "scale": 1.0
-    },
-    {
-      "path": "./path/to/coding_skill_adapter.gguf",
-      "scale": 0.75
-    }
-  ]
-}
+Our key addition is support for loading one or more LoRA adapters dynamically when the model starts up. It's all managed through http requests
+```bash
+curl https://hyperbeam-node/~wasi-nn@1.0/generate?lora-id -d '{"prompt":"hello there!", "lora_id":"session_id_or_txid", "lora_scale":"1.0"}'
 ```
-*   **`path`**: The file path to the GGUF-formatted LoRA adapter from Pyrust-NN.
+
+*   **`session-id or txid`**: url or cache registry of lora.
 *   **`scale`**: An optional number to adjust how strongly the adapter affects the base model. This lets you fine-tune the mix for different traits.
 
 This setup allows **stacking multiple LoRA adapters**. You can combine various skills, memories, or personalities like building blocks. For example, give an AI a base personality, add expert knowledge in a field, and include recent chat history—all adjustable separately.
