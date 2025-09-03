@@ -1,10 +1,10 @@
-### *The Astral Plane*
+Astral Plan
 
 #### **1. Introduction: A New Paradigm for Personalized and Persistent AI**
 
-The Astral Plane project represents a comprehensive, vertically integrated system architected to facilitate the creation and operation of highly personalized, adaptive AI agents. Our primary objective is to fundamentally shift the paradigm from static, pre-trained models to a new class of AI entities capable of continuous, meaningful evolution based on longitudinal user interaction. This is achieved through a novel synthesis of a hybrid training framework, a secure and dynamic inference backend, and a high-fidelity conversational interface.
+The Astral Plane project is an end-to-end, vertically integrated system designed to enable the creation and use of highly personalized, adaptive AI agents. Our main goal is to fundamentally change the paradigm from static pre-trained models to a new class of AI entities that can evolve continuously in a meaningful way based on longitudinal user interaction. This is attained via a new integration of a hybrid training system, a secure and dynamic inference backend, and a high-fidelity conversational interface.
 
-This architecture is built on a core philosophy: to create a model that **lives forever and learns forever**. It is not a disposable tool but a persistent companion, a digital extension of its user that grows, remembers, and adapts over its entire lifecycle. This document details the core technologies and architectural pillars that make this vision a reality.
+This architecture is based on a central philosophy: to build a model that **lives forever and learns forever**.A digital surrogate of its operator that learns, remembers, and improves throughout its lifecycle. **All of the custom tools and frameworks described in this document were created specifically for this project and constructed utilizing HyperBEAM's enveironment.**
 
 ---
 
@@ -12,15 +12,15 @@ This architecture is built on a core philosophy: to create a model that **lives 
 
 ##### **2.1. Pyrust-NN: The Forge of Continual Personalization**
 
-At the heart of our system is **Pyrust-NN**, a sophisticated hybrid Rust-Python framework for the efficient and reproducible fine-tuning of Large Language Models, **with a pronounced specialization for the Qwen model family (e.g., Qwen1.5 series)**. It combines the robust, high-performance architecture of Rust for orchestration with the unparalleled machine learning ecosystem of Python. This focus on Qwen ensures optimized compatibility with its unique architecture, tokenizers, and chat templates, leading to superior performance and reliability out-of-the-box.
+At the core of our infrastructure is **Pyrust-NN**, an advanced hybrid Rust-Python environment for reproducible and efficient fine-tuning of Large Language Models, **with a strong specialization for the Qwen model family (e.g., Qwen1.5 series)**. It leverages the solid, high-performance architecture of Rust for orchestration with the unmatched machine learning ecosystem of Python via PyO3 bindings. This specialization in Qwen guarantees optimal compatibility with its specific architecture, tokenizers, and chat templates to yield better performance and reliability out-of-the-box.
 
 **Key Capabilities:**
 
-*   **LoRA-Based Fine-Tuning:** The framework excels at Parameter-Efficient Fine-Tuning (PEFT) via Low-Rank Adaptation (LoRA). This allows for rapid, memory-efficient personalization by training only a small fraction of the model's parameters, making it ideal for frequent updates and experimentation. The LoRA target modules are pre-configured for optimal performance with Qwen models.
-*   **Full Model Fine-Tuning:** For deep, foundational changes to a model's knowledge base or core personality, Pyrust-NN supports complete fine-tuning. This resource-intensive process adjusts all model parameters, creating a highly specialized base model upon which further LoRA adaptations can be applied.
-*   **Continual LoRA Training:** This is the cornerstone of our "learns forever" philosophy. The framework is designed for perpetual learning, allowing you to take an existing LoRA adapter and continue its training on new conversational data. This enables an agent's personality and knowledge to evolve indefinitely, directly reflecting its ongoing interactions.
-*   **Agentic Workflow Enablement:** By facilitating rapid and continual LoRA updates, the framework provides the core mechanism for an AI agent to learn from its interactions, update its skills, and evolve its memory over time. This directly supports the development of sophisticated **agentic systems** where the AI's capabilities are not fixed but are perpetually refined through experience.
-*   **Model Conversion & Quantization:** To bridge the gap between training and efficient deployment, Pyrust-NN provides a seamless pipeline to convert models and LoRA adapters from standard `.safetensors` formats into the highly efficient `.gguf` format. It also supports quantization to reduce the model's memory footprint and accelerate inference speed.
+*   **LoRA-Based Fine-Tuning:** The framework is particularly adept at Parameter-Efficient Fine-Tuning (PEFT) through Low-Rank Adaptation (LoRA). This facilitates fast, memory-saving personalization by fine-tuning just a subset of the model's parameters, which is great for frequent re-tuning and experimentation. The LoRA target modules come pre-configured for best performance with Qwen models.
+*   **Full Model Fine-Tuning:** For deeper, structural overhauls to the knowledge base or underlying personality of a model, Pyrust-NN accommodates full fine-tuning. This heavy-hitting technique updates all the model parameters, building a highly specific base model upon which additional LoRA tweaks may be applied.
+*   **Ongoing LoRA Training:** This is the foundation of our "learns forever" philosophy. The system is built for continuous learning, enabling you to take a pre-trained LoRA adapter and keep its training going on new conversational data. This enables an agent's personality and knowledge to constantly update, mirroring its ongoing conversations.
+*   **Agentic Workflow Enablement:** Through enabling quick and ongoing LoRA updates, the framework enables the central mechanism for an AI agent to learn from its experience, revise its capabilities, and shape its memory as time passes. This works directly towards empowering advanced **agentic systems** in which the capabilities of the AI are not set in stone but are continuously honed through experience.
+*   **Model Conversion & Quantization:** In order to fill the gap between training and production-ready deployment, Pyrust-NN offers an effortless pipeline to convert models and LoRA adapters from conventional `.safetensors` formats to the extremely memory-efficient `.gguf` format. It further offers quantization for minifying the model memory and speeding up inference time.
 
 Training data is ingested in a simple, standardized JSON format. This structure is specifically designed to be seamlessly processed by the **Qwen chat template** during tokenization, ensuring that roles (`system`, `user`, `assistant`) are correctly interpreted and that the loss is calculated effectively during training.
 
@@ -28,7 +28,7 @@ Training data is ingested in a simple, standardized JSON format. This structure 
 {
   "messages": [
     { "role": "system", "content": "You are a helpful and witty assistant." },
-    { "role": "user", "content": "What is the capital of Nebraska?" },
+{ "role": "user", "content": "What is the capital of Nebraska?" },
     { "role": "assistant", "content": "Ah, a classic! The capital of Nebraska is Lincoln. A fine city, indeed." }
   ]
 }
@@ -38,11 +38,11 @@ This comprehensive suite of tools makes Pyrust-NN the ideal engine for creating 
 
 ##### **2.2. Dynamic LoRA Inference on HyperBEAM**
 
-To run these personalized models securely and efficiently, we have developed a custom extension of the **`wasi_nn_backend`**, which utilizes WebAssembly (WASM) to provide a secure, sandboxed runtime environment on HyperBEAM. This ensures that each user's AI agent operates in a completely isolated space.
+In order to execute these individualized models securely and optimally, we have created a proprietary extension of the **`wasi_nn_backend`**, leveraging WebAssembly (WASM) for offering a secure, sandboxed execution space on HyperBEAM. This guarantees each user's AI agent runs entirely isolated space.
 
 **Dynamic Adapter Loading via JSON Configuration**
 
-Our primary innovation is a LoRA extension engineered directly into the backend, allowing for the dynamic application of one or more adapters at model initialization. This configuration is managed through a clean and simple JSON interface, providing maximum flexibility.
+Our main innovation is an extension of LoRA directly implemented into the backend that supports dynamic use of one or multiple adapters upon model initialization. The setup is handled via a tidy and easy-to-use JSON interface that offers maximum flexibility.
 
 ```json
 {
@@ -52,7 +52,8 @@ Our primary innovation is a LoRA extension engineered directly into the backend,
       "scale": 1.0
     },
     {
-      "path": "./path/to/coding_skill_adapter.gguf",
+
+"path": "./path/to/coding_skill_adapter.gguf",
       "scale": 0.75
     }
   ]
@@ -61,18 +62,18 @@ Our primary innovation is a LoRA extension engineered directly into the backend,
 *   **`path`**: Specifies the file path to the GGUF-formatted LoRA adapter generated by Pyrust-NN.
 *   **`scale`**: An optional floating-point multiplier for the adapter's weights. This enables fine-grained control over the intensity of each LoRA's influence on the base model, allowing for nuanced personality blending.
 
-This system fully supports **stacking multiple LoRA adapters**. This powerful feature allows for the composition of complex AI agents by combining different fine-tuned skills, memories, or personality traits as modular components. An agent can be simultaneously imbued with a core personality, specialized knowledge, and short-term conversational memory, all through separate, manageable adapters.
+This architecture completely accommodates **stacking multiple LoRA adapters**. This feature enables the building of complex AI agents through combining various fine-tuned skills, memories, or personality traits as modular units. An agent can be endowed with a fundamental personality, domain-specific knowledge, and short-term conversation memory simultaneously, all through independently controlled adapters.
 
 ##### **2.3. The Conversational Interface: The Senses of the AI**
 
-To facilitate a truly naturalistic and immersive interaction, the Astral Plane system incorporates a sophisticated audio processing pipeline that serves as the AI's senses of hearing and speech.
+To enable an authentically naturalistic and engaging interaction, the Astral Plane system includes a high-fidelity audio processing pipeline that acts as the AI's hearing and speech senses.
 
-**Speech-to-Text (STT): Hearing with Whisper**
+**Speech-to-Text (STT): Whisper with Hearing**
 
-User audio input is processed by OpenAI's **Whisper** model. Its state-of-the-art transcription capabilities across a wide range of accents, languages, and acoustic environments provide a robust and reliable method for converting spoken language into clean text. This text serves as the input prompt for the core LLM, allowing the user to speak naturally and conversationally, without the need for rigid commands.
+User speech input is processed by OpenAI's **Whisper** model. Its cutting-edge transcription across broad accents, languages, and acoustic conditions gives a strong and dependable way of transcribing spoken language into clean text. This text is used as the input prompt to the base LLM, enabling the user to converse naturally and conversationally without having to rigidly command. 
 
 **Text-to-Speech (TTS): Speaking with the Conversational Speech Model (CSM)**
 
-The agent's voice is powered by the **Conversational Speech Model (CSM)**. This is a critical component for creating a sense of presence and personality. Unlike traditional, monotonous TTS systems that operate solely on text, CSM is a multi-modal model built upon a Llama architecture. It accepts both the text to be spoken *and* the preceding conversational context as input to generate its audio output.
+The voice of the agent is driven by the **Conversational Speech Model (CSM)**. This is an important element to achieve a feeling of presence and personality. CSM, being a multi-modal model based on a Llama architecture, is different from other, monotonous TTS systems that only run on text. CSM is a model that takes in both the text to be read *and* the previous conversational history as input in order to produce its audio output.
 
-This contextual awareness is transformative. It allows CSM to produce speech with significantly more natural prosody, intonation, and emotional cadence that is appropriate to the ongoing dialogue. The result is a voice that feels truly engaging and alive, turning a simple interaction into a genuine conversation.
+This awareness in context is revolutionary. It enables CSM to create speech with much more natural prosody, intonation, and emotional rhythm that is suited to the existing conversation. This results in a voice that sounds remarkably engaging and vibrant, transforming an ordinary interaction into an authentic conversation.
