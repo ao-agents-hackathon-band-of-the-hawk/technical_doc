@@ -1,4 +1,4 @@
-Astral Plan
+##  Astral Plane  ##
 
 #### **1. Introduction: A New Paradigm for Personalized and Persistent AI**
 
