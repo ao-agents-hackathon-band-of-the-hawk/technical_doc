@@ -44,13 +44,13 @@ To run these custom models safely and efficiently, we've extended the **`wasi_nn
 
 Our key addition is support for loading one or more LoRA adapters dynamically when the model starts up. It's all managed through http requests
 ```bash
-curl https://hyperbeam-node/~wasi-nn@1.0/generate?lora-id -d '{"prompt":"hello there!", "lora_id":"session_id_or_txid", "lora_scale":"1.0"}'
+curl https://hyperbeam-node/~wasi-nn@1.0/infer -d '{"prompt":"hello there!", "lora_id":"session_id_or_txid", "lora_scale":"1.0"}'
 ```
 
 *   **`session-id or txid`**: url or cache registry of lora.
 *   **`scale`**: An optional number to adjust how strongly the adapter affects the base model. This lets you fine-tune the mix for different traits.
 
-This setup allows **stacking multiple LoRA adapters**. You can combine various skills, memories, or personalities like building blocks. For example, give an AI a base personality, add expert knowledge in a field, and include recent chat history—all adjustable separately.
+This setup allows **stacking multiple LoRA adapters (note "multiple" lora extension was made in the wasi_nn_backend, HyperBEAM is tested for only 1)**. You can combine various skills, memories, or personalities like building blocks. For example, give an AI a base personality, add expert knowledge in a field, and include recent chat history—all adjustable separately.
 
 ##### 2.3. The Conversational Interface: How the AI Hears and Speaks
 
